@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\SecretController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -13,6 +13,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::middleware(['maintenance-mode'])->group(function () {
+    Route::view('/', 'welcome')->name('home'); 
+    Route::view('/maintenance', 'maintenance')->name('maintenance');
+    Route::view('/test', 'test');
 });
+
+Route::get('/secret', [SecretController::class, 'index'])->name('secret.index');
+Route::post('/secret', [SecretController::class, 'store'])->name('secret.store');
